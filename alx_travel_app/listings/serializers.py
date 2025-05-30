@@ -21,7 +21,9 @@ class ListingSerializer(serializers.ModelSerializer):
 
 class BookingSerializer(serializers.ModelSerializer):
     listing_title = serializers.CharField(source='listing.title', read_only=True)
+    listing_detail = ListingSerializer(source='listing', read_only=True)
     user_username = serializers.CharField(source='user.username', read_only=True)
+
 
     class Meta:
         model = Booking
@@ -29,6 +31,7 @@ class BookingSerializer(serializers.ModelSerializer):
             'id',
             'listing',
             'listing_title',
+            'listing_detail',
             'user',
             'user_username',
             'start_date',
@@ -48,6 +51,9 @@ class BookingSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user_username = serializers.CharField(source='user.username', read_only=True)
+    listing_detail = ListingSerializer(source='listing', read_only=True)
+    listing = ListingSerializer(read_only = True)
+
 
     class Meta:
         model = Review
@@ -56,6 +62,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'listing',
             'user',
             'user_username',
+            'listing_detail',
             'rating',
             'comment',
             'created_at'
