@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Listing, Booking, Review
 
+
 class ListingSerializer(serializers.ModelSerializer):
     host_username = serializers.CharField(source='host.username', read_only=True)
 
@@ -24,14 +25,13 @@ class BookingSerializer(serializers.ModelSerializer):
     listing_detail = ListingSerializer(source='listing', read_only=True)
     user_username = serializers.CharField(source='user.username', read_only=True)
 
-
     class Meta:
         model = Booking
         fields = [
             'id',
             'listing',
             'listing_title',
-            'listing_detail',
+            'listing_detail',  # Nested listing detail
             'user',
             'user_username',
             'start_date',
@@ -52,17 +52,15 @@ class BookingSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     user_username = serializers.CharField(source='user.username', read_only=True)
     listing_detail = ListingSerializer(source='listing', read_only=True)
-    listing = ListingSerializer(read_only = True)
-
 
     class Meta:
         model = Review
         fields = [
             'id',
-            'listing',
+            'listing',            # ID field for write operations (POST/PUT)
+            'listing_detail',     # Nested listing for read operations (GET)
             'user',
             'user_username',
-            'listing_detail',
             'rating',
             'comment',
             'created_at'
